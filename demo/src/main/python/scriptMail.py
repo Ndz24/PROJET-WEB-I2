@@ -11,6 +11,10 @@ from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
 from datetime import datetime
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+TOKEN_PATH = os.path.join(SCRIPT_DIR, "token.json")
+CREDENTIALS_PATH = os.path.join(SCRIPT_DIR, "credentials.json")
+
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 nlp = spacy.load("fr_core_news_md")
 
@@ -22,36 +26,51 @@ CATEGORIES = {
 
 def gmail_auth():
     creds = None
-
-    #Si token existe
-    if os.path.exists("token.json"):
+    
+    # Si token existe
+    if os.path.exists(TOKEN_PATH):
         try:
-            creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+            creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
         except Exception as e:
-            print("Suppression du token !")
-            os.remove("token.json")
+            print(f"Erreur avec le token existant : {e}")
+            if os.path.exists(TOKEN_PATH):
+                os.remove(TOKEN_PATH)
             creds = None
     
-    #Si le token n'existe pas
+    # Si le token n'existe pas ou n'est pas valide
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
             except Exception as e:
-                print("Erreur refresh token !")
-                if os.path.exists("token.json"):
-                    os.remove("token.json")
+                print(f"Erreur refresh token : {e}")
+                if os.path.exists(TOKEN_PATH):
+                    os.remove(TOKEN_PATH)
                 creds = None
         if not creds:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=0)
-        
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+            if not os.path.exists(CREDENTIALS_PATH):
+                raise FileNotFoundError(
+                    f"Le fichier credentials.json n'existe pas dans {SCRIPT_DIR}. "
+                    "Veuillez télécharger vos credentials depuis Google Cloud Console."
+                )
+            
+            try:
+                flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+                creds = flow.run_local_server(port=0)
+                
+                # Sauvegarder le token
+                with open(TOKEN_PATH, 'w') as token:
+                    token.write(creds.to_json())
+            except Exception as e:
+                print(f"Erreur lors de l'authentification : {e}")
+                raise
     
-    #Création du service gmail
-    service = build('gmail', 'v1', credentials=creds)
-    return service
+    try:
+        service = build('gmail', 'v1', credentials=creds)
+        return service
+    except Exception as e:
+        print(f"Erreur lors de la création du service Gmail : {e}")
+        raise
 
 # def connect_db():
 #     try:

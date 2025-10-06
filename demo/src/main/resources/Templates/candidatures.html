@@ -222,9 +222,9 @@
                 <span class="logo-text">CareerTrackr</span>
             </a>
             <nav class="headerLinks">
-                <a th:href="@{/accueil}">Accueil</a>
                 <a th:href="@{/candidatures}">Profil</a>
                 <a th:href="@{/CVs}">Vos CVs</a>
+                <a th:href="@{/logout}">Se déconnecter</a>
             </nav>
         </div>
     </div>
@@ -240,45 +240,13 @@
             </svg>
         </div>
         <div class="candidatures-list">
-            <h2>Résultat Authentification</h2>
-            <p th:if="${data != null}">
-                <span>Job : </span><span th:text="${data.job}"></span><br/>
-                <span>Entreprise : </span><span th:text="${data.company}"></span><br/>
-                <span>Date : </span><span th:text="${data.date}"></span><br/>
-                <span>État : </span><span th:text="${data.etat}"></span>
-            </p>
-
-
-            <div class="candidature-block">
-                <div class="candidature-title">Candidatures envoyées</div>
+            <div class="candidature-block" th:if="${data != null}">
+                <div class="candidature-title">Nouvelle candidature</div>
                 <ul class="candidature-infos-list">
-                    <li class="candidature-info">Data Analyst</li>
-                    <li class="candidature-info">CGI</li>
-                    <li class="candidature-info">29/09/2025 17:05</li>
-                </ul>
-            </div>
-            <div class="candidature-block">
-                <div class="candidature-title">Entretiens prévus</div>
-                <ul class="candidature-infos-list">
-                    <li class="candidature-info">Développeur Web</li>
-                    <li class="candidature-info">Microsoft</li>
-                    <li class="candidature-info">28/09/2025 14:30</li>
-                </ul>
-            </div>
-            <div class="candidature-block">
-                <div class="candidature-title">Candidatures après entretien</div>
-                <ul class="candidature-infos-list">
-                    <li class="candidature-info">Chef de projet</li>
-                    <li class="candidature-info">Amazon</li>
-                    <li class="candidature-info">27/09/2025 09:15</li>
-                </ul>
-            </div>
-            <div class="candidature-block">
-                <div class="candidature-title">Candidatures refusées</div>
-                <ul class="candidature-infos-list">
-                    <li class="candidature-info">Designer UX/UI</li>
-                    <li class="candidature-info">Apple</li>
-                    <li class="candidature-info">26/09/2025 11:45</li>
+                    <li class="candidature-info" th:text="${data.job}">Poste</li>
+                    <li class="candidature-info" th:text="${data.company}">Entreprise</li>
+                    <li class="candidature-info" th:text="${data.date}">Date</li>
+                    <li class="candidature-info" th:text="${data.etat}">État</li>
                 </ul>
             </div>
         </div>
