@@ -512,16 +512,14 @@
     // Filtrage
     document.querySelector('.filter-input').addEventListener('input', function(e) {
         const filter = e.target.value.toLowerCase();
-        document.querySelectorAll('.candidature-block').forEach(function(card) {
-            const text = card.innerText.toLowerCase();
-            if (filter === '' || text.includes(filter)) {
-                card.style.visibility = 'visible';
-                card.style.opacity = '1';
-                card.style.pointerEvents = '';
+        document.querySelectorAll('.kanban-card').forEach(function(card) {
+            const company = card.querySelector('.card-company').textContent.toLowerCase();
+            const position = card.querySelector('.card-position').textContent.toLowerCase();
+            
+            if (filter === '' || company.includes(filter) || position.includes(filter)) {
+                card.style.display = '';
             } else {
-                card.style.visibility = 'hidden';
-                card.style.opacity = '0';
-                card.style.pointerEvents = 'none';
+                card.style.display = 'none';
             }
         });
     });
