@@ -439,9 +439,9 @@
 
         <div class="kanban-container">
             <!-- Accusé de réception -->
-            <div class="kanban-column">
+            <div class="kanban-column" data-status="envoyee" ondragover="allowDrop(event)" ondrop="drop(event)">
                 <div class="kanban-title">Accusé de réception</div>
-                <div class="kanban-card" th:if="${data != null and data.etat == 'envoyee'}">
+                <div class="kanban-card card-sent" draggable="true" ondragstart="drag(event)" th:if="${data != null and data.etat == 'envoyee'}">
                     <div class="card-company" th:text="${data.company}">Entreprise</div>
                     <div class="card-position" th:text="${data.job}">Poste</div>
                     <div class="card-date" th:text="${data.date}">Date</div>
@@ -449,9 +449,9 @@
             </div>
 
             <!-- Entretiens prévus -->
-            <div class="kanban-column">
+            <div class="kanban-column" data-status="entretien" ondragover="allowDrop(event)" ondrop="drop(event)">
                 <div class="kanban-title">Entretiens prévus</div>
-                <div class="kanban-card" th:if="${data != null and data.etat == 'entretien'}">
+                <div class="kanban-card card-interview" draggable="true" ondragstart="drag(event)" th:if="${data != null and data.etat == 'entretien'}">
                     <div class="card-company" th:text="${data.company}">Entreprise</div>
                     <div class="card-position" th:text="${data.job}">Poste</div>
                     <div class="card-date" th:text="${data.date}">Date</div>
@@ -459,9 +459,9 @@
             </div>
 
             <!-- Candidatures refusées -->
-            <div class="kanban-column">
+            <div class="kanban-column" data-status="refusee" ondragover="allowDrop(event)" ondrop="drop(event)">
                 <div class="kanban-title">Candidatures refusées</div>
-                <div class="kanban-card" th:if="${data != null and data.etat == 'refusee'}">
+                <div class="kanban-card card-rejected" draggable="true" ondragstart="drag(event)" th:if="${data != null and data.etat == 'refusee'}">
                     <div class="card-company" th:text="${data.company}">Entreprise</div>
                     <div class="card-position" th:text="${data.job}">Poste</div>
                     <div class="card-date" th:text="${data.date}">Date</div>
@@ -548,6 +548,9 @@
         // Créer la nouvelle carte
         const card = document.createElement('div');
         card.className = 'kanban-card';
+        card.draggable = true;
+        card.id = 'card-' + Date.now(); // Ajouter un ID unique
+        card.setAttribute('ondragstart', 'drag(event)');
 
         // Ajouter la classe de couleur selon le statut
         switch(status) {
@@ -612,6 +615,50 @@
     window.onclick = function(event) {
         if (event.target == document.getElementById('candidatureModal')) {
             closeModal();
+        }
+    }
+
+    // Ajouter ces nouvelles fonctions à votre script existant
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("cardId", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        const cardId = ev.dataTransfer.getData("cardId");
+        const card = document.getElementById(cardId);
+        const newStatus = ev.currentTarget.dataset.status;
+        
+        // Supprimer les classes de couleur existantes
+        card.classList.remove('card-sent', 'card-interview', 'card-rejected');
+        
+        // Ajouter la nouvelle classe de couleur selon le statut
+        switch(newStatus) {
+            case 'envoyee':
+                card.classList.add('card-sent');
+                break;
+            case 'entretien':
+                card.classList.add('card-interview');
+                break;
+            case 'refusee':
+                card.classList.add('card-rejected');
+                break;
+        }
+
+        // Restaurer l'opacité
+        card.style.opacity = "1";
+        
+        // Déplacer la carte dans la nouvelle colonne
+        const column = ev.currentTarget;
+        const title = column.querySelector('.kanban-title');
+        if (title.nextSibling) {
+            column.insertBefore(card, title.nextSibling);
+        } else {
+            column.appendChild(card);
         }
     }
 
