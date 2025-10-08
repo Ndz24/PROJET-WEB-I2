@@ -73,13 +73,17 @@
             margin: 0;
         }
         .features {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 32px;
-            justify-content: space-between;
             margin: 40px auto;
             max-width: 1200px;
+            padding: 0 24px;
         }
         .feature {
+            width: 100%;
+            max-width: 360px;
+            justify-self: center;
             background: #fff;
             border-radius: 18px;
             box-shadow: 0 4px 24px rgba(91,42,134,0.10), 0 1.5px 8px rgba(255,83,99,0.07);
