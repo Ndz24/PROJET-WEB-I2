@@ -203,15 +203,6 @@
             box-shadow: 0 -2px 12px rgba(91,42,134,0.04);
         }
 
-        /* Ajout des styles pour la prévisualisation PDF */
-        .pdf-preview {
-            width: 100%;
-            height: 200px;
-            object-fit: contain;
-            margin-bottom: 18px;
-            cursor: pointer;
-        }
-
         /* Style pour la modal PDF */
         .pdf-modal {
             display: none;
@@ -243,6 +234,29 @@
             font-size: 35px;
             cursor: pointer;
         }
+        .pdf-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+        }
+
+        .pdf-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .click-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            background: transparent;
+        }
+
     </style>
 </head>
 <body>
@@ -305,14 +319,18 @@
                 // Contenu de la carte
                 newFeature.innerHTML = `
                     <button class="delete-btn" title="Supprimer ce CV" onclick="this.closest('.feature').remove()">&#10005;</button>
-                    ${file.type === 'application/pdf' 
-                        ? `<object class="pdf-preview" data="${fileURL}" type="application/pdf" onclick="openPdfModal('${fileURL}')">
-                            <p>Impossible d'afficher l'aperçu PDF</p>
-                           </object>`
-                        : `<img src="${fileURL}" alt="CV" onclick="openPdfModal('${fileURL}')">`
-                    }
-                    <h2>${file.name}</h2>
+                    <div class="pdf-wrapper">
+                        ${file.type === 'application/pdf' 
+                            ? `<object class="pdf-preview" data="${fileURL}" type="application/pdf">
+                                <p>Impossible d'afficher l'aperçu PDF</p>
+                            </object>
+                            <div class="click-overlay" onclick="openPdfModal('${fileURL}', 'pdf')"></div>`
+                            : `<img src="${fileURL}" alt="CV" class="pdf-preview" onclick="openPdfModal('${fileURL}', 'image')">`
+                        }
+                    </div>
+                    <h2 style="margin-top: 30px;">${file.name}</h2>
                 `;
+
 
                 // Ajouter la carte à la section
                 document.querySelector('.features').appendChild(newFeature);
@@ -331,7 +349,7 @@
         }
 
         // Fermer la modal si on clique en dehors
-        window.flexonclick = function(event) {
+        window.onclick = function(event) {
             const modal = document.getElementById('pdfModal');
             if (event.target == modal) {
                 modal.style.display = 'none';
