@@ -108,10 +108,22 @@
             box-shadow: 0 2px 8px rgba(91,42,134,0.07);
         }
         .feature h2 {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: var(--g1);
             margin-bottom: 8px;
             margin-top: 0;
+            text-align: center;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+            max-width: 100%;
+            max-height: 3.3em; /* Permet environ 3 lignes */
+            line-height: 1.1em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
         }
         .feature p {
             color: #444;
