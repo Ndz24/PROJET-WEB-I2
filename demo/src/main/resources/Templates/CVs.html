@@ -186,6 +186,47 @@
             flex-shrink: 0;
             box-shadow: 0 -2px 12px rgba(91,42,134,0.04);
         }
+
+        /* Ajout des styles pour la prévisualisation PDF */
+        .pdf-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 18px;
+            cursor: pointer;
+        }
+
+        /* Style pour la modal PDF */
+        .pdf-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+        }
+
+        .pdf-modal-content {
+            width: 90%;
+            height: 90%;
+            margin: 2% auto;
+        }
+
+        .pdf-modal-content object {
+            width: 100%;
+            height: 100%;
+        }
+
+        .pdf-close {
+            position: absolute;
+            right: 25px;
+            top: 10px;
+            color: #fff;
+            font-size: 35px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -206,22 +247,28 @@
 
     <main>
         <section class="hero">
-            <h1>Découvrez vos cvs ! </h1>
+            <h1>Découvrez vos cvs !</h1>
             <p>Gérez vos cvs en toute simplicité.</p>
         </section>
         <section class="features">
-            <div class="feature">
-                <button class="delete-btn" title="Supprimer ce CV">&#10005;</button>
-                <img src="Dev_Web.png" alt="CV1">
-                <h2>CV1</h2>
-                <p>Développeur Web</p>
-                <p>Expérience : 5 ans</p>
-            </div>
+
         </section>
 
+        <!-- Bouton d'ajout -->
         <button class="add-button" onclick="document.getElementById('file-input').click()">+</button>
         <input type="file" id="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+
+        <!-- Modal pour l'affichage PDF -->
+        <div id="pdfModal" class="pdf-modal">
+            <span class="pdf-close" onclick="closePdfModal()">&times;</span>
+            <div class="pdf-modal-content">
+                <object id="pdfViewer" type="application/pdf" width="100%" height="100%">
+                    <p>Erreur d'affichage !</p>
+                </object>
+            </div>
+        </div>
     </main>
+
     <script>
         document.querySelectorAll('.delete-btn').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
@@ -232,53 +279,47 @@
 
         document.getElementById('file-input').addEventListener('change', function(e) {
             if (this.files && this.files.length > 0) {
-                alert('Fichier sélectionné : ' + this.files[0].name);
+                const file = this.files[0];
+                const fileURL = URL.createObjectURL(file);
+                
+                // Créer une nouvelle carte
+                const newFeature = document.createElement('div');
+                newFeature.className = 'feature';
+                
+                // Contenu de la carte
+                newFeature.innerHTML = `
+                    <button class="delete-btn" title="Supprimer ce CV" onclick="this.closest('.feature').remove()">&#10005;</button>
+                    ${file.type === 'application/pdf' 
+                        ? `<object class="pdf-preview" data="${fileURL}" type="application/pdf" onclick="openPdfModal('${fileURL}')">
+                            <p>Impossible d'afficher l'aperçu PDF</p>
+                           </object>`
+                        : `<img src="${fileURL}" alt="CV" onclick="openPdfModal('${fileURL}')">`
+                    }
+                    <h2>${file.name}</h2>
+                `;
+
+                // Ajouter la carte à la section
+                document.querySelector('.features').appendChild(newFeature);
             }
         });
-    </script>
-    <footer class="footer">
-        <p>Copyright &copy; 2025 CareerTrackr. Tous droits réservés.</p>
-    </footer>
-</body>
-</html>
-    <main>
-        <section class="hero">
-            <h1>Découvrez vos cvs ! </h1>
-            <p>Gérez vos cvs en toute simplicité.</p>
-        </section>
-        <section class="features">
-            <div class="feature">
-                <button class="delete-btn" title="Supprimer ce CV">&#10005;</button>
-                <img src="Dev_Web.png" alt="CV1">
-                <h2>CV1</h2>
-                <p>Développeur Web</p>
-                <p>Expérience : 5 ans</p>
-            </div>
 
-            <div class="add-cv-container">
-                <label class="add-cv-label">
-                    <span class="add-cv-icon">&#43;</span>
-                    Ajouter un CV
-                    <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" id="add-cv-input">
-                </label>
-            </div>
-        </section>
-    </main>
-    <script>
-        document.querySelectorAll('.delete-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                const block = btn.closest('.feature');
-                if (block) block.remove();
-            });
-        });
+        function openPdfModal(url) {
+            const modal = document.getElementById('pdfModal');
+            const pdfViewer = document.getElementById('pdfViewer');
+            pdfViewer.data = url;
+            modal.style.display = 'block';
+        }
 
-        const addCvInput = document.getElementById('add-cv-input');
-        if (addCvInput) {
-            addCvInput.addEventListener('change', function(e) {
-                if (addCvInput.files && addCvInput.files.length > 0) {
-                    alert('Fichier sélectionné : ' + addCvInput.files[0].name);
-                }
-            });
+        function closePdfModal() {
+            document.getElementById('pdfModal').style.display = 'none';
+        }
+
+        // Fermer la modal si on clique en dehors
+        window.flexonclick = function(event) {
+            const modal = document.getElementById('pdfModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
         }
     </script>
     <footer class="footer">
