@@ -1,7 +1,7 @@
 package main.java.demo.service;
 
-import demo.dao.EmailDao;
-import demo.data.Email;
+import demo.model.Email;
+import demo.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -10,13 +10,13 @@ import java.util.List;
 public class EmailService {
 
     @Autowired
-    private EmailDao emailDao;
+    private EmailRepository emailRepository;
 
     public void saveEmail(Email email) {
-        emailDao.save(email);
+        emailRepository.save(email);
     }
 
     public List<Email> getAllEmails() {
-        return emailDao.findAll();
+        return emailRepository.findAll();
     }
 }

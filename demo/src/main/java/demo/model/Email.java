@@ -1,4 +1,4 @@
-package demo.data;
+package main.java.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
