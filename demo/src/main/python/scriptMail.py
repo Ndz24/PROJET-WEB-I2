@@ -2,6 +2,7 @@ from __future__ import print_function
 import os.path
 import base64
 import spacy
+import json
 import re
 #import psycopg2
 from google.oauth2.credentials import Credentials
@@ -174,20 +175,23 @@ def get_first_mail(service):
                 break
         
         #Affichage
-        print(f"Job : {job_title}")
-        print(f"Entreprise : {company}")
-        print(f"Date : {date}")
-        print(f"Etat : {etat}")
+        #print(f"Job : {job_title}")
+        #print(f"Entreprise : {company}")
+        #print(f"Date : {date}")
+        #print(f"Etat : {etat}")
 
         #Enregistrement DB
         #insert_candidature(job_title, company, date, etat)
 
-        return {
+        result = {
             "job": job_title,
             "company": company,
             "date": date,
             "etat": etat
         }
+    
+        print(json.dumps(result))
+
     except Exception as e:
         print(f"Erreur : {e}")
 
