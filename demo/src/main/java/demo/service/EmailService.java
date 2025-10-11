@@ -1,4 +1,4 @@
-package main.java.demo.service;
+package demo.service;
 
 import demo.model.Email;
 import demo.repository.EmailRepository;
@@ -10,13 +10,13 @@ import java.util.List;
 public class EmailService {
 
     @Autowired
-    private EmailRepository emailRepository;
+    private EmailRepository EmailRepository;
 
     public void saveEmail(Email email) {
-        emailRepository.save(email);
+        EmailRepository.save(email);
     }
 
     public List<Email> getAllEmails() {
-        return emailRepository.findAll();
+        return EmailRepository.findAll();
     }
 }
