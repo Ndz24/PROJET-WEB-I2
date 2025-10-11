@@ -1,6 +1,5 @@
 package demo.controller;
 
-import java.io.File;
 import demo.model.Email;
 import demo.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,18 @@ public class AuthController {
     @GetMapping("/candidatures")
     public String candidatures(Model model) {
         // Récupère tous les mails depuis la base
-        model.addAttribute("emails", emailService.getAllEmails());
+        model.addAttribute("data", emailService.getAllEmails());
         return "candidatures";
     }
 
     @GetMapping("/CVs")
     public String cvs() {
         return "CVs";
+    }
+
+    @GetMapping("/login")
+        public String login() {
+        return "accueil";
     }
 
     @GetMapping("/auth")
@@ -79,7 +83,7 @@ public class AuthController {
             emailService.saveEmail(email);
 
             // Recharge les données pour la vue
-            model.addAttribute("emails", emailService.getAllEmails());
+            model.addAttribute("data", emailService.getAllEmails());
             model.addAttribute("message", "Mail récupéré et enregistré !");
 
         } catch (Exception e) {

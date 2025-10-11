@@ -424,6 +424,7 @@
             </nav>
         </div>
     </div>
+
     <div class="main-container">
         <div class="top-bar">
             <span class="main-title">Suivi des candidatures</span>
@@ -441,30 +442,30 @@
             <!-- Accusé de réception -->
             <div class="kanban-column" data-status="envoyee" ondragover="allowDrop(event)" ondrop="drop(event)">
                 <div class="kanban-title">Accusé de réception</div>
-                <div class="kanban-card card-sent" draggable="true" ondragstart="drag(event)" th:if="${data != null and data.etat == 'envoyee'}">
-                    <div class="card-company" th:text="${data.company}">Entreprise</div>
-                    <div class="card-position" th:text="${data.job}">Poste</div>
-                    <div class="card-date" th:text="${data.date}">Date</div>
+                <div th:each="email : ${data}" th:if="${email.etat == 'envoyee'}" class="kanban-card card-sent" draggable="true" ondragstart="drag(event)">
+                    <div class="card-company" th:text="${email.company}">Entreprise</div>
+                    <div class="card-position" th:text="${email.job}">Poste</div>
+                    <div class="card-date" th:text="${email.date}">Date</div>
                 </div>
             </div>
 
             <!-- Entretiens prévus -->
             <div class="kanban-column" data-status="entretien" ondragover="allowDrop(event)" ondrop="drop(event)">
                 <div class="kanban-title">Entretiens prévus</div>
-                <div class="kanban-card card-interview" draggable="true" ondragstart="drag(event)" th:if="${data != null and data.etat == 'entretien'}">
-                    <div class="card-company" th:text="${data.company}">Entreprise</div>
-                    <div class="card-position" th:text="${data.job}">Poste</div>
-                    <div class="card-date" th:text="${data.date}">Date</div>
+                <div th:each="email : ${data}" th:if="${email.etat == 'entretien'}" class="kanban-card card-interview" draggable="true" ondragstart="drag(event)">
+                    <div class="card-company" th:text="${email.company}">Entreprise</div>
+                    <div class="card-position" th:text="${email.job}">Poste</div>
+                    <div class="card-date" th:text="${email.date}">Date</div>
                 </div>
             </div>
 
             <!-- Candidatures refusées -->
             <div class="kanban-column" data-status="refusee" ondragover="allowDrop(event)" ondrop="drop(event)">
                 <div class="kanban-title">Candidatures refusées</div>
-                <div class="kanban-card card-rejected" draggable="true" ondragstart="drag(event)" th:if="${data != null and data.etat == 'refusee'}">
-                    <div class="card-company" th:text="${data.company}">Entreprise</div>
-                    <div class="card-position" th:text="${data.job}">Poste</div>
-                    <div class="card-date" th:text="${data.date}">Date</div>
+                <div th:each="email : ${data}" th:if="${email.etat == 'refusee'}" class="kanban-card card-rejected" draggable="true" ondragstart="drag(event)">
+                    <div class="card-company" th:text="${email.company}">Entreprise</div>
+                    <div class="card-position" th:text="${email.job}">Poste</div>
+                    <div class="card-date" th:text="${email.date}">Date</div>
                 </div>
             </div>
         </div>
@@ -503,8 +504,8 @@
             </form>
         </div>
     </div>
-
 </body>
+
 <footer class="footer">
         <p>Copyright &copy; 2025 CareerTrackr. Tous droits réservés.</p>
     </footer>
